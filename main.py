@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from database import conectar, criar_tabelas
-from models import Livro, Usuario
+from models import Livro, Usuario, Emprestimo
 
 app = Flask(__name__)
 
@@ -56,6 +56,18 @@ def adicionar_usuarios():
 
     return jsonify ({"mensagem": "usuário cadastrado"})
 
+@app.route("/emprestimos", methods = ["GET"])
+def listar_emprestimos():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM emprestimos")
+    dados = cursor.fetchall()
+
+    emprestimos = [Emprestimo(*E).to_dict() for E in dados]
+    conn.close()
+    return jsonify(emprestimos)
+
 @app.route("/emprestimos", methods = ["POST"])
 def emprestar():
     dados = request.json
@@ -77,25 +89,27 @@ def emprestar():
 
     return jsonify ({"mensagem": "Emprestimo realizado"})
 
-@app.route("/emprestimos", methods = ["PUT"])
+@app.route("/emprestimos/<int:id>", methods = ["PUT"])
 def devolver(id):
     conn = conectar()
-    cursor = conectar.cursor()
+    try:
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT livro_id FROM emprestimos WHERE id = ?", (id))
-    resultado = cursor.fetchone()
+        cursor.execute("UPDATE emprestimos SET devolvido = 1 WHERE id = ? AND devolvido = 0", (id,))
 
-    if not resultado:
-        return jsonify ({"erro": "empréstimo não encontrado"})
+        if cursor.rowcount == 0:
+            return jsonify ({"erro": "Empréstimo não encontrado ou já devolvido"}),404
+        
+        cursor.execute("SELECT id_livro FROM emprestimos WHERE id = ?", (id,))
+        livro = cursor.fetchone()
+
+        cursor.execute("UPDATE livros SET quantidade = quantidade + 1 WHERE id = ?", (livro[0],))
+
+        conn.commit()
+        return jsonify ({"mensagem": "Devolução realizada"})
     
-    id_livro = resultado[0]
-
-    cursor.execute("UPDATE emprestimos SET devolvido = 1 WHERE id = ?", (id_livro,))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify ({"mensagem": "Devolução realizada"})
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     criar_tabelas()
