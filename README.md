@@ -1,31 +1,80 @@
 # Loan Management System
 
-Sistema de empréstimo de livros desenvolvido para estudos de desenvolvimento web, backend e gerenciamento de dados.
+Sistema de empréstimo de livros desenvolvido como projeto de estudo para backend e gerenciamento de dados.
 
-## Objetivo
-O projeto simula um sistema de controle de empréstimos de livros, permitindo o gerenciamento de usuários, livros e registros de empréstimo.
+## 🚀 Descrição
+Este projeto simula um sistema de controle de empréstimos de livros, com funções de cadastro, consulta e devolução de itens. Ele é ideal para aprender conceitos de API, persistência de dados e arquitetura de aplicação em Python.
 
-## Funcionalidades
-- Cadastro de livros
-- Cadastro de usuários
-- Registro de empréstimos
+## ✅ Funcionalidades
+- Cadastro e listagem de livros
+- Cadastro e listagem de usuários
+- Registro de empréstimos de livros
 - Controle de devoluções
-- Consulta de informações
+- Consulta de histórico e status de empréstimos
 
-## Tecnologias utilizadas
+## 🛠️ Tecnologias
 - Python
 - Flask
-- SQL
+- SQL (SQLite ou similar)
 - Git/GitHub
 
-## Status do projeto
-✅ Projeto concluído
+## 📁 Estrutura do projeto
+- `main.py` — ponto de entrada da aplicação
+- `database/connection.py` — configuração da conexão com o banco
+- `database/setup.py` — inicialização/estrutura do banco de dados
+- `models/` — classes e modelos de dados
+  - `livro.py`
+  - `usuario.py`
+  - `emprestimo.py`
+- `routes/` — rotas da API
+  - `livros.py`
+  - `usuarios.py`
+  - `emprestimos.py`
 
-## Aprendizados
-Durante o desenvolvimento deste projeto foram praticados conceitos como:
-- Desenvolvimento backend
+## ▶️ Como executar
+1. Crie um ambiente virtual (recomendado):
+   ```bash
+   python -m venv venv
+   ```
+2. Ative o ambiente virtual:
+   - Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+3. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Execute a aplicação:
+   ```bash
+   python main.py
+   ```
+
+## 🧪 Uso
+Após iniciar a aplicação, acesse as rotas definidas em `routes/` para gerenciar livros, usuários e empréstimos. Por exemplo:
+- `GET /livros`
+- `POST /usuarios`
+- `POST /emprestimos`
+- `PUT /emprestimos/<id>/devolver`
+
+## 🎯 Objetivos do projeto
+- Praticar desenvolvimento backend com Python e Flask
+- Estruturar rotas e endpoints REST
+- Trabalhar com persistência de dados em banco
+- Organizar código por camadas e responsabilidades
+
+## 📚 Aprendizados
+Principais temas estudados e aplicados:
+- Desenvolvimento de API REST
+- Organização de projeto Python
 - Programação orientada a objetos
-- Estruturação de rotas
-- Organização de aplicações web
-- Modelagem de banco de dados
-- Lógica de programação
+- Modelagem de dados e controle de empréstimos
+- Organização de rotas e estruturas de arquivos
+
+## 📌 Observações
+- Ideal para usar como base em projetos de estudo ou portfólio
+- Pode ser expandido com autenticação, frontend e testes automatizados
