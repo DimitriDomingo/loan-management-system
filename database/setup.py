@@ -1,8 +1,8 @@
 from .connection import conectar
 
-
 def criar_tabelas():
     conn = conectar()
+    conn.execute("PRAGMA foreign_keys = ON")
     cursor = conn.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS livros (
@@ -20,7 +20,10 @@ def criar_tabelas():
                    id INTEGER PRIMARY KEY,
                    id_livro INTEGER,
                    id_usuario INTEGER,
-                   devolvido INTEGER DEFAULT 0)""")
+                   devolvido INTEGER DEFAULT 0
+                   
+                   FOREIGN KEY (id_livro) REFERENCES livros(id),
+                   FOREIGN KEY (id_usuario) REFERENCES uruarios(id));""")
 
     conn.commit()
     conn.close()

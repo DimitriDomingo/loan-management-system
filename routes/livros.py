@@ -1,33 +1,39 @@
-from flask import Blueprint, jsonify, request
-from database.connection import conectar
-from models.livro import Livro
+# routes/livro_routes.py
 
-livros_bp = Blueprint('livros', __name__)
+from flask import Blueprint, jsonify, request
+
+from services.livro_service import (
+    criar_livro_service,
+    listar_livros_service
+)
+
+livros_bp = Blueprint("livros", __name__)
 
 
 @livros_bp.route("/livros", methods=["GET"])
 def listar_livros():
-    conn = conectar()
-    cursor = conn.cursor()
+    livros = listar_livros_service()
 
-    cursor.execute("SELECT * FROM livros")
-    dados = cursor.fetchall()
-
-    livros = [Livro(*I).to_dict() for I in dados]
-    conn.close()
-    return jsonify(livros)
+    return jsonify(livros), 200
 
 
 @livros_bp.route("/livros", methods=["POST"])
-def adicionar_livros():
+def adicionar_livro():
     dados = request.json
 
-    conn = conectar()
-    cursor = conn.cursor()
+    try:
+        criar_livro_service(dados)
 
-    cursor.execute("INSERT INTO livros (titulo, autor, quantidade) VALUES (?, ?, ?)", (dados["titulo"], dados["autor"], dados["quantidade"]))
+        return jsonify({
+            "mensagem": "Livro cadastrado com sucesso"
+        }), 201
 
-    conn.commit()
-    conn.close()
+    except ValueError as erro:
+        return jsonify({
+            "erro": str(erro)
+        }), 400
 
-    return jsonify({"mensagem": "livro cadastrado"})
+    except Exception:
+        return jsonify({
+            "erro": "Erro interno do servidor"
+        }), 500
