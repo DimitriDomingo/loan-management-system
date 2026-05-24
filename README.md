@@ -1,80 +1,228 @@
-# Loan Management System
+# Sistema de Empréstimo de Livros
 
-Sistema de empréstimo de livros desenvolvido como projeto de estudo para backend e gerenciamento de dados.
+API backend desenvolvida com Python e Flask para gerenciamento de livros, usuários e empréstimos.
 
-## 🚀 Descrição
-Este projeto simula um sistema de controle de empréstimos de livros, com funções de cadastro, consulta e devolução de itens. Ele é ideal para aprender conceitos de API, persistência de dados e arquitetura de aplicação em Python.
+O projeto possui arquitetura em camadas utilizando:
+- Routes
+- Services
+- Repository
 
-## ✅ Funcionalidades
-- Cadastro e listagem de livros
-- Cadastro e listagem de usuários
-- Registro de empréstimos de livros
-- Controle de devoluções
-- Consulta de histórico e status de empréstimos
+Além disso, utiliza banco de dados relacional SQLite com:
+- Foreign Keys
+- JOINs
+- Regras de negócio
+- Controle de estoque
 
-## 🛠️ Tecnologias
+---
+
+# Tecnologias Utilizadas
+
 - Python
 - Flask
-- SQL (SQLite ou similar)
+- SQLite
+- SQL
 - Git/GitHub
 
-## 📁 Estrutura do projeto
-- `main.py` — ponto de entrada da aplicação
-- `database/connection.py` — configuração da conexão com o banco
-- `database/setup.py` — inicialização/estrutura do banco de dados
-- `models/` — classes e modelos de dados
-  - `livro.py`
-  - `usuario.py`
-  - `emprestimo.py`
-- `routes/` — rotas da API
-  - `livros.py`
-  - `usuarios.py`
-  - `emprestimos.py`
+---
 
-## ▶️ Como executar
-1. Crie um ambiente virtual (recomendado):
-   ```bash
-   python -m venv venv
-   ```
-2. Ative o ambiente virtual:
-   - Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - macOS/Linux:
-     ```bash
-     source venv/bin/activate
-     ```
-3. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Execute a aplicação:
-   ```bash
-   python main.py
-   ```
+# Funcionalidades
 
-## 🧪 Uso
-Após iniciar a aplicação, acesse as rotas definidas em `routes/` para gerenciar livros, usuários e empréstimos. Por exemplo:
-- `GET /livros`
-- `POST /usuarios`
-- `POST /emprestimos`
-- `PUT /emprestimos/<id>/devolver`
+## Livros
+- Cadastrar livros
+- Listar livros
+- Atualizar livros
+- Deletar livros
 
-## 🎯 Objetivos do projeto
-- Praticar desenvolvimento backend com Python e Flask
-- Estruturar rotas e endpoints REST
-- Trabalhar com persistência de dados em banco
-- Organizar código por camadas e responsabilidades
+## Usuários
+- Cadastrar usuários
+- Listar usuários
+- Atualizar usuários
+- Deletar usuários
 
-## 📚 Aprendizados
-Principais temas estudados e aplicados:
-- Desenvolvimento de API REST
-- Organização de projeto Python
-- Programação orientada a objetos
-- Modelagem de dados e controle de empréstimos
-- Organização de rotas e estruturas de arquivos
+## Empréstimos
+- Realizar empréstimos
+- Listar empréstimos
+- Devolver livros
+- Controle automático de estoque
 
-## 📌 Observações
-- Ideal para usar como base em projetos de estudo ou portfólio
-- Pode ser expandido com autenticação, frontend e testes automatizados
+---
+
+# Estrutura do Projeto
+
+```text
+project/
+│
+├── database/
+│   ├── connection.py
+│   └── setup.py
+│
+├── models/
+│
+├── repositories/
+│   ├── livro_repository.py
+│   ├── usuario_repository.py
+│   └── emprestimo_repository.py
+│
+├── routes/
+│   ├── livros.py
+│   ├── usuarios.py
+│   └── emprestimos.py
+│
+├── services/
+│   ├── livro_service.py
+│   ├── usuario_service.py
+│   └── emprestimo_service.py
+│
+├── app.py
+└── requirements.txt
+```
+
+---
+
+# Arquitetura
+
+## Routes
+Responsáveis por:
+- receber requisições HTTP
+- retornar respostas
+- definir status HTTP
+
+---
+
+## Services
+Responsáveis por:
+- regras de negócio
+- validações
+- controle do fluxo da aplicação
+
+---
+
+## Repository
+Responsáveis por:
+- acesso ao banco de dados
+- execução de SQL
+- manipulação de consultas
+
+---
+
+# Banco de Dados
+
+O projeto utiliza SQLite com relacionamento entre tabelas utilizando Foreign Keys.
+
+Exemplo:
+- empréstimos relacionados a usuários
+- empréstimos relacionados a livros
+
+Também são utilizados JOINs para retornar informações completas nas consultas.
+
+---
+
+# Como Executar o Projeto
+
+## 1. Clonar o repositório
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+---
+
+## 2. Entrar na pasta
+
+```bash
+cd nome-do-projeto
+```
+
+---
+
+## 3. Criar ambiente virtual
+
+```bash
+python -m venv venv
+```
+
+---
+
+## 4. Ativar ambiente virtual
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux/Mac
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+## 5. Instalar dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 6. Executar aplicação
+
+```bash
+python app.py
+```
+
+---
+
+# Endpoints
+
+## Livros
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| GET | /livros | Listar livros |
+| POST | /livros | Criar livro |
+| PUT | /livros/id | Atualizar livro |
+| DELETE | /livros/id | Deletar livro |
+
+---
+
+## Usuários
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| GET | /usuarios | Listar usuários |
+| POST | /usuarios | Criar usuário |
+| PUT | /usuarios/id | Atualizar usuário |
+| DELETE | /usuarios/id | Deletar usuário |
+
+---
+
+## Empréstimos
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| GET | /emprestimos | Listar empréstimos |
+| POST | /emprestimos | Realizar empréstimo |
+| PUT | /emprestimos/id | Devolver livro |
+
+---
+
+# Regras de Negócio
+
+- Não é possível emprestar livro sem estoque
+- Não é possível devolver livro já devolvido
+- O estoque é atualizado automaticamente
+- Usuários e livros precisam existir para realizar empréstimos
+
+---
+
+# Objetivo do Projeto
+
+O projeto foi desenvolvido com foco em:
+- aprendizado de backend
+- arquitetura em camadas
+- APIs REST
+- integração com banco de dados relacional
+- boas práticas de organização backend

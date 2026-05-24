@@ -1,10 +1,10 @@
-# routes/livro_routes.py
-
 from flask import Blueprint, jsonify, request
 
 from services.livro_service import (
     criar_livro_service,
-    listar_livros_service
+    listar_livros_service,
+    atualizar_livro_service,
+    deletar_livro_service
 )
 
 livros_bp = Blueprint("livros", __name__)
@@ -32,6 +32,49 @@ def adicionar_livro():
         return jsonify({
             "erro": str(erro)
         }), 400
+
+    except Exception:
+        return jsonify({
+            "erro": "Erro interno do servidor"
+        }), 500
+
+
+@livros_bp.route("/livros/<int:id_livro>", methods=["PUT"])
+def atualizar_livro(id_livro):
+    dados = request.json
+
+    try:
+        atualizar_livro_service(id_livro, dados)
+
+        return jsonify({
+            "mensagem": "Livro atualizado com sucesso"
+        }), 200
+
+    except ValueError as erro:
+        return jsonify({
+            "erro": str(erro)
+        }), 400
+
+    except Exception:
+        return jsonify({
+            "erro": "Erro interno do servidor"
+        }), 500
+
+
+@livros_bp.route("/livros/<int:id_livro>", methods=["DELETE"])
+def deletar_livro(id_livro):
+
+    try:
+        deletar_livro_service(id_livro)
+
+        return jsonify({
+            "mensagem": "Livro deletado com sucesso"
+        }), 200
+
+    except ValueError as erro:
+        return jsonify({
+            "erro": str(erro)
+        }), 404
 
     except Exception:
         return jsonify({

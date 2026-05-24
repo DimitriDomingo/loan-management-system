@@ -1,5 +1,3 @@
-
-
 def listar_emprestimos_(conn):
     cursor = conn.cursor()
 
@@ -9,9 +7,12 @@ def listar_emprestimos_(conn):
             usuarios.nome,
             livros.titulo,
             emprestimos.devolvido
+
         FROM emprestimos
+
         JOIN usuarios
             ON emprestimos.id_usuario = usuarios.id
+
         JOIN livros
             ON emprestimos.id_livro = livros.id
     """)
@@ -19,28 +20,40 @@ def listar_emprestimos_(conn):
     return cursor.fetchall()
 
 
-def selecionar_qtd_(conn, dados):
+def buscar_usuario_(conn, id_usuario):
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id
+        FROM usuarios
+        WHERE id = ?
+    """, (id_usuario,))
+
+    return cursor.fetchone()
+
+
+def buscar_livro_(conn, id_livro):
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT quantidade
         FROM livros
         WHERE id = ?
-    """, (dados["id_livro"],))
+    """, (id_livro,))
 
     return cursor.fetchone()
 
 
-def realizar_emprestimo_(conn, dados):
+def criar_emprestimo_(conn, dados):
     cursor = conn.cursor()
+
     cursor.execute("""
-        INSERT INTO emprestimos (
-            id_usuario,
-            id_livro,
-            devolvido
-        )
-        VALUES (?, ?, 0)
-    """, (dados["id_usuario"], dados["id_livro"]))
+        INSERT INTO emprestimos (id_usuario, id_livro)
+        VALUES (?, ?)
+    """, (
+        dados["id_usuario"],
+        dados["id_livro"]
+    ))
 
     cursor.execute("""
         UPDATE livros
@@ -51,25 +64,26 @@ def realizar_emprestimo_(conn, dados):
     conn.commit()
 
 
-def devolver_livro_(conn, id):
+def devolver_livro_(conn, id_emprestimo):
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id_livro
         FROM emprestimos
         WHERE id = ?
-        AND devolvido = 0
-    """, (id,))
+    """, (id_emprestimo,))
 
     livro = cursor.fetchone()
-    if livro is None:
-        return 0
 
     cursor.execute("""
         UPDATE emprestimos
         SET devolvido = 1
         WHERE id = ?
-    """, (id,))
+        AND devolvido = 0
+    """, (id_emprestimo,))
+
+    if cursor.rowcount == 0:
+        return 0
 
     cursor.execute("""
         UPDATE livros
@@ -79,4 +93,4 @@ def devolver_livro_(conn, id):
 
     conn.commit()
 
-    return cursor.rowcount
+    return 1

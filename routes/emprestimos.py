@@ -1,5 +1,3 @@
-# routes/emprestimo_routes.py
-
 from flask import Blueprint, jsonify, request
 
 from services.emprestimo_service import (
@@ -11,14 +9,14 @@ from services.emprestimo_service import (
 emprestimos_bp = Blueprint("emprestimos", __name__)
 
 
-@emprestimos_bp.route("", methods=["GET"])
+@emprestimos_bp.route("/emprestimos", methods=["GET"])
 def listar_emprestimos():
     emprestimos = listar_emprestimos_service()
 
     return jsonify(emprestimos), 200
 
 
-@emprestimos_bp.route("", methods=["POST"])
+@emprestimos_bp.route("/emprestimos", methods=["POST"])
 def emprestar():
     dados = request.json
 
@@ -26,7 +24,7 @@ def emprestar():
         emprestar_service(dados)
 
         return jsonify({
-            "mensagem": "Empréstimo realizado com sucesso"
+            "mensagem": "Livro emprestado com sucesso"
         }), 201
 
     except ValueError as erro:
@@ -40,19 +38,20 @@ def emprestar():
         }), 500
 
 
-@emprestimos_bp.route("/devolver/<int:id>", methods=["PUT"])
-def devolver(id):
+@emprestimos_bp.route("/emprestimos/<int:id_emprestimo>", methods=["PUT"])
+def devolver_livro(id_emprestimo):
+
     try:
-        mensagem = devolver_livro_service(id)
+        devolver_livro_service(id_emprestimo)
 
         return jsonify({
-            "mensagem": mensagem
+            "mensagem": "Livro devolvido com sucesso"
         }), 200
 
     except ValueError as erro:
         return jsonify({
             "erro": str(erro)
-        }), 404
+        }), 400
 
     except Exception:
         return jsonify({

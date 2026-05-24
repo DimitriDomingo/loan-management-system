@@ -1,15 +1,17 @@
-# services/emprestimo_service.py
 from database.connection import conectar
+
 from repositories.emprestimo_repository import (
     listar_emprestimos_,
-    selecionar_qtd_,
-    realizar_emprestimo_,
+    buscar_usuario_,
+    buscar_livro_,
+    criar_emprestimo_,
     devolver_livro_
 )
 
 
 def listar_emprestimos_service():
     conn = conectar()
+
     try:
         emprestimos = listar_emprestimos_(conn)
 
@@ -24,6 +26,7 @@ def listar_emprestimos_service():
             })
 
         return lista_emprestimos
+
     finally:
         conn.close()
 
@@ -33,36 +36,43 @@ def emprestar_service(dados):
     id_livro = dados.get("id_livro")
 
     if not id_usuario:
-        raise ValueError("ID do usuário é obrigatório")
+        raise ValueError("Id do usuário é obrigatório")
 
     if not id_livro:
-        raise ValueError("ID do livro é obrigatório")
+        raise ValueError("Id do livro é obrigatório")
 
     conn = conectar()
-    try:
-        quantidade = selecionar_qtd_(conn, dados)
 
-        if quantidade is None:
+    try:
+        usuario = buscar_usuario_(conn, id_usuario)
+
+        if usuario is None:
+            raise ValueError("Usuário não encontrado")
+
+        livro = buscar_livro_(conn, id_livro)
+
+        if livro is None:
             raise ValueError("Livro não encontrado")
 
-        if quantidade[0] <= 0:
+        if livro[0] <= 0:
             raise ValueError("Livro indisponível")
 
-        realizar_emprestimo_(conn, dados)
+        criar_emprestimo_(conn, dados)
+
     finally:
         conn.close()
 
 
-def devolver_livro_service(id):
+def devolver_livro_service(id_emprestimo):
     conn = conectar()
+
     try:
-        atualizados = devolver_livro_(conn, id)
+        devolvido = devolver_livro_(conn, id_emprestimo)
 
-        if atualizados == 0:
-            raise ValueError("Empréstimo não encontrado ou já devolvido")
+        if devolvido == 0:
+            raise ValueError(
+                "Empréstimo não encontrado ou livro já devolvido"
+            )
 
-        return "Devolução realizada com sucesso"
     finally:
         conn.close()
-
-        
