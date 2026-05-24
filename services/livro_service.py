@@ -1,20 +1,16 @@
 # services/livro_service.py
 
 from database.connection import conectar
+from repositories.livro_repository import (
+    criar_livro_,
+    listar_livros_
+)
 
 
 def listar_livros_service():
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT id, titulo, autor, quantidade
-            FROM livros
-        """)
-
-        livros = cursor.fetchall()
+        livros = listar_livros_(conn)
 
         lista_livros = []
 
@@ -27,7 +23,6 @@ def listar_livros_service():
             })
 
         return lista_livros
-
     finally:
         conn.close()
 
@@ -44,16 +39,7 @@ def criar_livro_service(dados):
         raise ValueError("Autor é obrigatório")
 
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            INSERT INTO livros (titulo, autor, quantidade)
-            VALUES (?, ?, ?)
-        """, (titulo, autor, quantidade))
-
-        conn.commit()
-
+        criar_livro_(conn, dados)
     finally:
         conn.close()

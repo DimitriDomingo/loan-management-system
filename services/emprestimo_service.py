@@ -1,28 +1,17 @@
 # services/emprestimo_service.py
-
 from database.connection import conectar
+from repositories.emprestimo_repository import (
+    listar_emprestimos_,
+    selecionar_qtd_,
+    realizar_emprestimo_,
+    devolver_livro_
+)
 
 
 def listar_emprestimos_service():
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT
-                emprestimos.id,
-                usuarios.nome,
-                livros.titulo,
-                emprestimos.devolvido
-            FROM emprestimos
-            JOIN usuarios
-                ON emprestimos.id_usuario = usuarios.id
-            JOIN livros
-                ON emprestimos.id_livro = livros.id
-        """)
-
-        emprestimos = cursor.fetchall()
+        emprestimos = listar_emprestimos_(conn)
 
         lista_emprestimos = []
 
@@ -35,7 +24,6 @@ def listar_emprestimos_service():
             })
 
         return lista_emprestimos
-
     finally:
         conn.close()
 
@@ -51,80 +39,30 @@ def emprestar_service(dados):
         raise ValueError("ID do livro é obrigatório")
 
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
+        quantidade = selecionar_qtd_(conn, dados)
 
-        cursor.execute("""
-            SELECT quantidade
-            FROM livros
-            WHERE id = ?
-        """, (id_livro,))
-
-        livro = cursor.fetchone()
-
-        if livro is None:
+        if quantidade is None:
             raise ValueError("Livro não encontrado")
 
-        if livro[0] <= 0:
+        if quantidade[0] <= 0:
             raise ValueError("Livro indisponível")
 
-        cursor.execute("""
-            INSERT INTO emprestimos (
-                id_usuario,
-                id_livro,
-                devolvido
-            )
-            VALUES (?, ?, 0)
-        """, (id_usuario, id_livro))
-
-        cursor.execute("""
-            UPDATE livros
-            SET quantidade = quantidade - 1
-            WHERE id = ?
-        """, (id_livro,))
-
-        conn.commit()
-
+        realizar_emprestimo_(conn, dados)
     finally:
         conn.close()
 
 
 def devolver_livro_service(id):
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
+        atualizados = devolver_livro_(conn, id)
 
-        cursor.execute("""
-            UPDATE emprestimos
-            SET devolvido = 1
-            WHERE id = ?
-            AND devolvido = 0
-        """, (id,))
-
-        if cursor.rowcount == 0:
-            raise ValueError(
-                "Empréstimo não encontrado ou já devolvido"
-            )
-
-        cursor.execute("""
-            SELECT id_livro
-            FROM emprestimos
-            WHERE id = ?
-        """, (id,))
-
-        livro = cursor.fetchone()
-
-        cursor.execute("""
-            UPDATE livros
-            SET quantidade = quantidade + 1
-            WHERE id = ?
-        """, (livro[0],))
-
-        conn.commit()
+        if atualizados == 0:
+            raise ValueError("Empréstimo não encontrado ou já devolvido")
 
         return "Devolução realizada com sucesso"
-
     finally:
         conn.close()
+
+        

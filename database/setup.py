@@ -14,16 +14,16 @@ def criar_tabelas():
     cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
                    id INTEGER PRIMARY KEY,
                    nome TEXT NOT NULL,
-                   matricola TEXT UNIQUE NOT NULL)""")
+                   email TEXT UNIQUE NOT NULL)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS emprestimos (
                    id INTEGER PRIMARY KEY,
                    id_livro INTEGER,
                    id_usuario INTEGER,
-                   devolvido INTEGER DEFAULT 0
+                   devolvido INTEGER DEFAULT 0,
                    
                    FOREIGN KEY (id_livro) REFERENCES livros(id),
-                   FOREIGN KEY (id_usuario) REFERENCES uruarios(id));""")
+                   FOREIGN KEY (id_usuario) REFERENCES usuarios(id));""")
 
     conn.commit()
     conn.close()

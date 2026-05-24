@@ -1,6 +1,10 @@
 # services/usuario_service.py
 
 from database.connection import conectar
+from repositories.usuario_repository import (
+    adicionar_usuario_,
+    listar_usuarios_
+)
 
 
 def adicionar_usuarios_service(dados):
@@ -14,33 +18,16 @@ def adicionar_usuarios_service(dados):
         raise ValueError("Email é obrigatório")
 
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            INSERT INTO usuarios (nome, email)
-            VALUES (?, ?)
-        """, (nome, email))
-
-        conn.commit()
-
+        adicionar_usuario_(conn, dados)
     finally:
         conn.close()
 
 
 def listar_usuarios_service():
     conn = conectar()
-
     try:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT id, nome, email
-            FROM usuarios
-        """)
-
-        usuarios = cursor.fetchall()
+        usuarios = listar_usuarios_(conn)
 
         lista_usuarios = []
 
@@ -52,6 +39,5 @@ def listar_usuarios_service():
             })
 
         return lista_usuarios
-
     finally:
         conn.close()
