@@ -14,7 +14,8 @@ def criar_tabelas():
     cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
                    id INTEGER PRIMARY KEY,
                    nome TEXT NOT NULL,
-                   email TEXT UNIQUE NOT NULL)""")
+                   email TEXT UNIQUE NOT NULL,
+                   senha TEXT NOT NULL)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS emprestimos (
                    id INTEGER PRIMARY KEY,

@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
+from database.setup import criar_tabelas
 from routes.livros import livros_bp
 from routes.usuarios import usuarios_bp
 from routes.emprestimos import emprestimos_bp
@@ -6,6 +8,12 @@ from routes.emprestimos import emprestimos_bp
 
 def create_app():
     app = Flask(__name__)
+
+    app.config["JWT_SECRET_KEY"] = "Dimitri132.."
+
+    JWTManager(app)
+
+    criar_tabelas()
 
     app.register_blueprint(livros_bp)
     app.register_blueprint(usuarios_bp)

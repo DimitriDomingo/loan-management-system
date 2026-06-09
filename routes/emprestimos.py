@@ -20,6 +20,9 @@ def listar_emprestimos():
 def emprestar():
     dados = request.json
 
+    if not dados:
+        raise ValueError("Dados não enviados")
+
     try:
         emprestar_service(dados)
 
