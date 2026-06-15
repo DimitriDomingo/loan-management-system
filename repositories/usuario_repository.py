@@ -9,6 +9,18 @@ def listar_usuarios_(conn):
     return cursor.fetchall()
 
 
+def buscar_usuario_por_email(conn, dados):
+    cursor = conn.currsor()
+
+    cursor.execute("""
+        SELECT email
+        FROM usuarios
+        WHERE email = ?
+    """, (
+        dados["email"],
+    ))
+
+
 def criar_usuario_(conn, dados):
     cursor = conn.cursor()
 

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from services.livro_service import (
     criar_livro_service,
@@ -18,6 +19,7 @@ def listar_livros():
 
 
 @livros_bp.route("/livros", methods=["POST"])
+@jwt_required()
 def adicionar_livro():
     dados = request.json
 
@@ -40,6 +42,7 @@ def adicionar_livro():
 
 
 @livros_bp.route("/livros/<int:id_livro>", methods=["PUT"])
+@jwt_required()
 def atualizar_livro(id_livro):
     dados = request.json
 
@@ -62,6 +65,7 @@ def atualizar_livro(id_livro):
 
 
 @livros_bp.route("/livros/<int:id_livro>", methods=["DELETE"])
+@jwt_required()
 def deletar_livro(id_livro):
 
     try:

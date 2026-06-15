@@ -1,9 +1,10 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required
 from database.setup import criar_tabelas
 from routes.livros import livros_bp
 from routes.usuarios import usuarios_bp
 from routes.emprestimos import emprestimos_bp
+from routes.auth import auth_bp
 
 
 def create_app():
@@ -15,6 +16,7 @@ def create_app():
 
     criar_tabelas()
 
+    app.register_blueprint(auth_bp)
     app.register_blueprint(livros_bp)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(emprestimos_bp)

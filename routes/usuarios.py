@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from services.usuario_service import (
     listar_usuarios_service,
@@ -11,6 +12,7 @@ usuarios_bp = Blueprint("usuarios", __name__)
 
 
 @usuarios_bp.route("/usuarios", methods=["GET"])
+@jwt_required()
 def listar_usuarios():
     usuarios = listar_usuarios_service()
 
@@ -18,6 +20,7 @@ def listar_usuarios():
 
 
 @usuarios_bp.route("/usuarios", methods=["POST"])
+@jwt_required()
 def adicionar_usuario():
     dados = request.json
 
@@ -40,6 +43,7 @@ def adicionar_usuario():
 
 
 @usuarios_bp.route("/usuarios/<int:id_usuario>", methods=["PUT"])
+@jwt_required()
 def atualizar_usuario(id_usuario):
     dados = request.json
 
@@ -62,6 +66,7 @@ def atualizar_usuario(id_usuario):
 
 
 @usuarios_bp.route("/usuarios/<int:id_usuario>", methods=["DELETE"])
+@jwt_required()
 def deletar_usuario(id_usuario):
 
     try:

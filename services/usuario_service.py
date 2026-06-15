@@ -1,11 +1,23 @@
+import bcrypt
 from database.connection import conectar
-
 from repositories.usuario_repository import (
     listar_usuarios_,
     criar_usuario_,
     atualizar_usuario_,
-    deletar_usuario_
+    deletar_usuario_,
+    buscar_usuario_por_email
 )
+
+def buscar_usuario_por_email_service(email):
+    conn = conectar()
+
+    try:
+        buscar_usuario_por_email(email)
+
+        raise ValueError("Email é obrigatório")
+    
+    finally:
+        conn.close
 
 
 def listar_usuarios_service():
@@ -30,6 +42,11 @@ def listar_usuarios_service():
 
 def criar_usuario_service(dados):
     nome = dados.get("nome")
+
+    senha_hash = bcrypt.hashpw(dados["senha"].encode("utf-8"),
+                               bcrypt.gensalt())
+    
+    dados["senha"] = senha_hash.decode("utf-8")
 
     if not nome:
         raise ValueError("Nome é obrigatório")

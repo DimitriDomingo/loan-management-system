@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from services.emprestimo_service import (
     listar_emprestimos_service,
@@ -10,6 +11,7 @@ emprestimos_bp = Blueprint("emprestimos", __name__)
 
 
 @emprestimos_bp.route("/emprestimos", methods=["GET"])
+@jwt_required()
 def listar_emprestimos():
     emprestimos = listar_emprestimos_service()
 
@@ -17,6 +19,7 @@ def listar_emprestimos():
 
 
 @emprestimos_bp.route("/emprestimos", methods=["POST"])
+@jwt_required()
 def emprestar():
     dados = request.json
 
@@ -42,6 +45,7 @@ def emprestar():
 
 
 @emprestimos_bp.route("/emprestimos/<int:id_emprestimo>", methods=["PUT"])
+@jwt_required()
 def devolver_livro(id_emprestimo):
 
     try:
