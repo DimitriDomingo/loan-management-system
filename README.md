@@ -215,6 +215,7 @@ python app.py
 - Não é possível devolver livro já devolvido
 - O estoque é atualizado automaticamente
 - Usuários e livros precisam existir para realizar empréstimos
+- Um usuário nãopode ter dois empréstimos do mesmo livro ao mesmo tempo
 
 ---
 
