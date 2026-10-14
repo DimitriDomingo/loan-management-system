@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
+from database.connection import conectar
 from services.usuario_service import buscar_usuario_por_email_service
 import bcrypt
 
@@ -10,7 +11,7 @@ def login():
 
     dados = request.json
 
-    usuario = buscar_usuario_por_email_service(dados["email"])
+    usuario = buscar_usuario_por_email_service( dados["email"])
 
     if not usuario:
         return jsonify({"erro":"Usuário não encontrado"}), 404
@@ -24,7 +25,8 @@ def login():
         return jsonify({"erro": "Senhaa inválida"}), 401
     
     token = create_access_token(
-        identity=usuario["id"]
+        identity=usuario["id"],
+        additional_claims={"tipo": usuario["tipo"]}
     )
 
     return jsonify({"token": token}), 200

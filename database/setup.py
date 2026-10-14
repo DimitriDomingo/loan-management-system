@@ -15,7 +15,8 @@ def criar_tabelas():
                    id INTEGER PRIMARY KEY,
                    nome TEXT NOT NULL,
                    email TEXT UNIQUE NOT NULL,
-                   senha TEXT NOT NULL)""")
+                   senha TEXT NOT NULL,
+                   tipo TEXT NOT NULL)""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS emprestimos (
                    id INTEGER PRIMARY KEY,

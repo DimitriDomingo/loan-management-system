@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 
 from services.usuario_service import (
     listar_usuarios_service,
@@ -14,13 +14,17 @@ usuarios_bp = Blueprint("usuarios", __name__)
 @usuarios_bp.route("/usuarios", methods=["GET"])
 @jwt_required()
 def listar_usuarios():
+
+    claims = get_jwt()
+    print(claims)
+    
     usuarios = listar_usuarios_service()
 
     return jsonify(usuarios), 200
 
 
 @usuarios_bp.route("/usuarios", methods=["POST"])
-@jwt_required()
+
 def adicionar_usuario():
     dados = request.json
 
@@ -36,10 +40,8 @@ def adicionar_usuario():
             "erro": str(erro)
         }), 400
 
-    except Exception:
-        return jsonify({
-            "erro": "Erro interno do servidor"
-        }), 500
+    except Exception as e:
+        return jsonify(e)
 
 
 @usuarios_bp.route("/usuarios/<int:id_usuario>", methods=["PUT"])

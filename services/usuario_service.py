@@ -11,13 +11,16 @@ from repositories.usuario_repository import (
 def buscar_usuario_por_email_service(email):
     conn = conectar()
 
-    try:
-        buscar_usuario_por_email(email)
-
+    if not email:
         raise ValueError("Email é obrigatório")
+
+    try:
+        usuario = buscar_usuario_por_email(conn, email)
+
+        return usuario
     
     finally:
-        conn.close
+        conn.close()
 
 
 def listar_usuarios_service():
