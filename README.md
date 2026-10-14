@@ -122,7 +122,7 @@ Também são utilizados JOINs para retornar informações completas nas consulta
 ## 1. Clonar o repositório
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone https://github.com/DimitriDomingo/loan-management-system.git
 ```
 
 ---
@@ -130,7 +130,7 @@ git clone URL_DO_REPOSITORIO
 ## 2. Entrar na pasta
 
 ```bash
-cd nome-do-projeto
+cd loan-management-system
 ```
 
 ---
