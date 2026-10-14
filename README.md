@@ -175,7 +175,7 @@ python app.py
 
 ---
 
-# Endpoints
+# Endpoints.
 
 ## Livros
 
